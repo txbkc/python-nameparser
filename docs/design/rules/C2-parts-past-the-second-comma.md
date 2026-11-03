@@ -51,6 +51,10 @@
   ```
   "John Smith, MD, XYZ"  unlisted_caps_suffixes-everywhere  →  ambiguities=("comma-structure",)
   ```
+- **Behind a family comma whose part is postnominal**, the last later part that is not titles and suffixes is the given part (C16), neither a suffix nor flagged.
+  ```
+  "Smith, Jr., John"          →  given="John"
+  ```
 
 **Accepted:**
 
