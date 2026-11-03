@@ -285,9 +285,12 @@ def _side_by_side(name: ParsedName, a: Token, b: Token,
     written = _written_separator(name.original[a.span.end:b.span.start])
     # rules/R6: "A family comma between name words is never kept" --
     # side by side in the layout where its given part went to the
-    # family (P1's fold); a comma before a suffix stays (decisions/R6)
+    # family (P1's fold); a comma before a suffix stays (decisions/R6),
+    # and one between a title and the given part C16 moved up is a
+    # family comma too ('Smith, Dr., John')
     if (written and written[0] in _COMMA_WRITTEN
-            and a.role in _NAME_WORD_ROLES and b.role in _NAME_WORD_ROLES):
+            and (a.role in _NAME_WORD_ROLES or a.role is Role.TITLE)
+            and b.role in _NAME_WORD_ROLES):
         return None
     return written
 

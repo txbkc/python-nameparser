@@ -12,6 +12,7 @@
 - **A one-character suffix word inside a comma part** is read by what stands before it (C9).
 - **A suffix delimiter**, the semicolon, a hyphen or slash standing alone, or one the policy declares, parts the suffix words on each side of it as a comma would (C10).
 - **What the decision reports** is C11's.
+- **A name word in a later part behind a postnominal part** is the given part (C16).
 
 **Because:** a credential run after the comma means the name is in natural order with suffixes appended; anything else after the comma means the listing form.
 
@@ -44,5 +45,5 @@
 - The vocabulary question this rule asks — is the part after the comma nothing but suffix words — is asked a second time, without the word-count condition, to decide whether a glued East Asian honorific standing before a family comma comes off. That composition is tolerated input rather than contract — a comma between a family name and a given name is no part of CJK writing — so the precedence is stated at W3, with its examples, and not here. It is also the one consequence of this question Latin script cannot witness, nothing there being glued to the end of a name — which is why this bullet carries no example of its own.
 
 ---
-**Signal:** hub of C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13
+**Signal:** hub of C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C16
 **history:** decisions/C1 · **implemented:** nameparser/_pipeline/_assign.py, nameparser/_pipeline/_comma.py

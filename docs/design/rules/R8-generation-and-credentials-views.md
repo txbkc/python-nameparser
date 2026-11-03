@@ -54,7 +54,7 @@
   ```
 - A name word in the suffix, one a run took in by where it stands, is in the credentials, the catch-all.
   ```
-  "Smith, Jr., John"          →  credentials="John"
+  "John Smith, Jr., Bart"     →  credentials="Bart"
   ```
 - The kind of a word listed as a suffix word is the lexicon's, the kind of the suffix reading its `Lexicon` holds, so a word a caller adds as a generation (`add("secundus", kind="generation")`) reads as one, and a word added as a credential, as a plain `suffix`, or as an honorific, status or courtesy word is in the credentials, a credential written as a word (`acronym=False`) as the gated `KC` is (S11); an agnomen reads as an agnomen. On the default lexicon the kind is the shipped vocabulary's, which compiles it, and a lexicon whose readings a caller removed reads the kind it holds, not the files'.
   ```

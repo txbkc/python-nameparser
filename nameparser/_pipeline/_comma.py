@@ -752,11 +752,33 @@ def decide(state: ParseState, splits: bool | None = True) -> ParseState:
     # segment hands group nothing to join -- emptied here, where the
     # binding is, as #601's take removes what it binds, rather than
     # filtered out again in group (#613's /simplify)
+    segments = state.segments[:1] + ((),) + state.segments[2:]
+    family = not (whole or behind_generation)
+    # rules/C16: "the last later part that is not titles and suffixes
+    # is the given part" -- behind a family comma whose part was bound
+    # postnominal here, segment's C2 flag being the one reading of "not
+    # titles and suffixes"; the last, since a credential no list holds
+    # is flagged too ('Fincher, MD, MACP, Jacqueline'); an empty part
+    # stops the search, being structural (decisions/C16)
+    if family and len(segments) > 2:
+        given_at: tuple[int, PendingAmbiguity] | None = None
+        for k in range(2, len(segments)):
+            seg = segments[k]
+            if not seg:
+                break
+            for a in ambiguities:
+                if (a.kind is AmbiguityKind.COMMA_STRUCTURE
+                        and a.indices == seg):
+                    given_at = (k, a)
+                    break
+        if given_at is not None:
+            k, flag = given_at
+            ambiguities.remove(flag)
+            segments = ((segments[0], segments[k]) + segments[2:k]
+                        + segments[k + 1:])
     return copy_with(state, tokens=tuple(tokens),
-                     segments=state.segments[:1] + ((),)
-                     + state.segments[2:],
-                     structure=(Structure.SUFFIX_COMMA
-                                if whole or behind_generation
-                                else Structure.FAMILY_COMMA),
+                     segments=segments,
+                     structure=(Structure.FAMILY_COMMA if family
+                                else Structure.SUFFIX_COMMA),
                      ambiguities=tuple(ambiguities),
                      dropped=tuple(state.dropped) + tuple(core_idx))

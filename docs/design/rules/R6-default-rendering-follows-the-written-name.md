@@ -60,7 +60,7 @@
   ```
   "Smith, Jr."                →  str="Smith, Jr."
   "Smith, MD"                 →  str="Smith, MD"
-  "Smith, Jr., John"          →  str="Smith, Jr., John"
+  "Smith, Jr., John"          →  str="John Smith, Jr."
   ```
 - Two equal names can render differently. The order a name was read in is not compared, so a name loaded from a 2.x pickle, which recorded none, renders exactly as 2.x rendered it, given-first and space-joined, where a fresh parse of the same text renders as written. (The shape needs a pickle written by an older release, so no example line.)
 

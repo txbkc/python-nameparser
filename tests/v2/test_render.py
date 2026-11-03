@@ -156,7 +156,9 @@ def test_default_str_includes_nickname_and_maiden() -> None:
     # a comma with only a suffix after it stays (decisions/R6's
     # 2026-10-29 A SUFFIX COMMA entry)
     ("Smith, MD", None, "Smith, MD"),
-    ("Smith, Jr., John", None, "Smith, Jr., John"),
+    ("Smith, Jr., John", None, "John Smith, Jr."),
+    # C16 reads the given part behind the title: no comma between
+    ("Smith, Dr., John", None, "Dr. John Smith"),
     ("John, Jr.", None, "John, Jr."),
     ("John Smith, Jr., Dr., Prof.", None, "Dr., Prof. John Smith, Jr."),
     ("John Smith Dr., Prof.", None, "Dr., Prof. John Smith"),

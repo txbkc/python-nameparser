@@ -394,6 +394,58 @@ def test_an_empty_head_reads_as_its_family_comma_twin() -> None:
         f"before re-recording")
 
 
+#: one name word before the comma, as C3 counts: a whole name makes the
+#: comma a suffix comma, which C16 does not read (decisions/C16's Open)
+_FSG_HEADS = ("Smith", "SMITH", "de la Vega", "Van Buren", "", "(Bob)")
+_FSG_POSTNOMINALS = ("Jr.", "JR", "III", "MD", "PhD", "Jr. MD", "Esq.",
+                     "Dr.", "Prof.", "Ph. D.")
+_FSG_GIVEN_PARTS = ("John", "ERNEST L", "John Q.", "Dr. John", "Sir John",
+                    "van der Berg", "John (Jack)", "Mary nee Jones",
+                    "abdul Rahman", "J.")
+
+
+def _fsg_view(name: ParsedName) -> tuple[dict[str, list[str]], list[str]]:
+    # a field's words follow the order they were written, so compared
+    # as a sorted list; comma parts' commas are no word
+    fields = {k: sorted(v.replace(",", " ").split())
+              for k, v in name.as_dict().items()}
+    return fields, sorted(a.kind.value for a in name.ambiguities)
+
+
+def test_a_postnominal_part_before_the_given_part_reads_as_after_it() -> None:
+    """rules/C16's invariant: 'Smith, Jr., John' reads as
+    'Smith, John, Jr.' reads -- the postnominal part written between
+    the family and the given part, or after the given part -- its fields
+    (a field's words as a set) and ambiguity kinds alike, under every
+    order, behind one name word or none. 1,800 pairs (600 per order), well under a second serially
+    (measured 2026-11-03).
+
+    RECORDED NEGATIVE CONTROL, measured 2026-11-03: with C16's block in
+    `_comma.decide` disabled, all 1,800 pairs fail, 'SMITH, JR, ERNEST L'
+    reading suffix 'JR, ERNEST L' among them.
+    """
+    failures: list[str] = []
+    rows = 0
+    for label, order in (("given-first", GIVEN_FIRST),
+                         ("family-first", FAMILY_FIRST),
+                         ("family-first-given-last",
+                          FAMILY_FIRST_GIVEN_LAST)):
+        parser = Parser(policy=Policy(name_order=order))
+        for head, post, given_part in itertools.product(
+                _FSG_HEADS, _FSG_POSTNOMINALS, _FSG_GIVEN_PARTS):
+            rows += 1
+            text = f"{head}, {post}, {given_part}"
+            twin_text = f"{head}, {given_part}, {post}"
+            got = _fsg_view(parser.parse(text))
+            twin = _fsg_view(parser.parse(twin_text))
+            if got != twin:
+                failures.append(f"{label}: {text!r} reads {got} but "
+                                f"{twin_text!r} reads {twin}")
+    assert rows == 3 * 600, rows
+    assert not failures, (
+        f"{len(failures)} pair(s) disagree:\n" + "\n".join(failures[:15]))
+
+
 #: The one-case-head exception class, and the recorded size of it.
 #: Structural rather than a name list: a name whose OWN words are
 #: written in one case, where the member's own writing is the only
